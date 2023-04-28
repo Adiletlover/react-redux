@@ -1,45 +1,30 @@
 import React from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { decrement, increment, randomINC } from '../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { setGuess, resetGame } from '../store/reducers/reducers';
+import '../style.css'
 
-const OldApp = () => {
-  const { count } = useSelector((state) => state);
+const App = () => {
   const dispatch = useDispatch();
+  const guess = useSelector((state) => state.guess);
+  const message = useSelector((state) => state.message);
 
-  const onIncrement = () => dispatch(increment());
-  const onDecrement = () => dispatch(decrement());
-  const onRandomInc = () => dispatch(randomINC());
-  return (
-    <div>
-      <h1>{count}</h1>
-      <button onClick={onIncrement}>+</button>
-      <button onClick={onDecrement}>-</button>
-      <button onClick={onRandomInc}>+RND</button>
-    </div>
-  );
-};
-
-const App = ({ count, onDecrement, onIncrement, onRandomInc }) => {
-  console.log(count);
-  return (
-    <div>
-      <h1>{count}</h1>
-      <button onClick={onIncrement}>+</button>
-      <button onClick={onDecrement}>-</button>
-      <button onClick={onRandomInc}>+RND</button>
-    </div>
-  );
-};
-
-const mapStateToProps = (state) => {
-  return {
-    count: state.count,
+  const handleGuessChange = (e) => {
+    dispatch(setGuess(e.target.value));
   };
-};
-const mapDispatchToProps = {
-  onIncrement: () => increment(),
-  onDecrement: () => decrement(),
-  onRandomInc: () => randomINC(),
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+  const handleResetClick = () => {
+    dispatch(resetGame());
+  };
+
+  return (
+    <main>
+      <label>
+        Введите число:
+        <input type="number" value={guess} onChange={handleGuessChange} />
+      </label>
+      <button onClick={handleResetClick}>Заново</button>
+      <p id='result'>{message}</p>
+    </main>
+  );
+};
+export default App;
